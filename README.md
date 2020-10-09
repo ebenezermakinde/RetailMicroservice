@@ -70,22 +70,22 @@ These will prevent unnecessary build processes.
 
 ## GoLive Plan
 ### Checklist
-:ballot_box_with_check: Revise architecture, get rid of Single Points of Failure
-:ballot_box_with_check: Ensure all stakeholders are happy with the propose architecture if not plan for revision and get a general consensus
+- Revise architecture, get rid of Single Points of Failure :ballot_box_with_check: 
+- Ensure all stakeholders are happy with the propose architecture if not plan for revision and get a general consensus :ballot_box_with_check:
 
 Additionally, you want your service to be highly available:
 
-:ballot_box_with_check: Deploy in multiple availability zones and regions(Traffic manager handles this),
-replicate data multiple times(Azure Cosmos DB handles this)
-:ballot_box_with_check: Design with failure as a real scenario and add retriable logic with exponential backoff
-:ballot_box_with_check: Ensure secure is considered
+- Deploy in multiple availability zones and regions(Traffic manager handles this),
+replicate data multiple times(Azure Cosmos DB handles this) :ballot_box_with_check: 
+- Design with failure as a real scenario and add retriable logic with exponential backoff :ballot_box_with_check: 
+- Ensure security is considered :ballot_box_with_check:
  - Hide in a private network the resources that don’t need to be publicly accessible.
  - Protect the resources that are exposed to public internet.
 
 #### Documentation
 :ballot_box_with_check: Ensure your documentation (README/Wiki entries), provide enough information about your app:
 
-what it does, provide enough context about the problems it solves,
+What it does, provide enough context about the problems it solves,
  - how to install it,
  - how tests are run,
  - Usage (--help output for binaries with available flags).
@@ -104,10 +104,9 @@ Structured logging provides useful insights on what your app does and can be agg
 :ballot_box_with_check: Set up alerts
 Create alerts based on business and operations logic, here are some examples:
 
-no files received from 3rd party provider within 6hrs,
-disk usage is above 75%,
-error rate is above a certain threshold rate for 15mins,
-service is unhealthy,
+ 1. Disk usage is above 75%,
+ 2. Error rate is above a certain threshold rate for 15mins, service is unhealthy,
+ 
 Note: Finding the right value for a threshold sometimes takes time, and should be adjusted as you don’t want to be alerted too often as you’ll end up ignoring, or even worse missing alerts due to excessive noise.
 
 Think about what threshold is acceptable for your service and investigate why an alert was triggered, and if necessary adjust the threshold.
