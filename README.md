@@ -1,8 +1,14 @@
 # :apple::watermelon:RetailMicroservice :department_store::man::woman:
+
+## Architecture overview
 Proof of concept for a fictitious retail Microservice 
-- [Architecture overview](#RetailMicroservice)
+- [Architecture overview](#architecture-overview)
   - [Macro architecture](#macro-architecture)
   - [Data flow](#data-flow)
+  - [Deployment Tools](#deployment-tools)
+  - [Monitoring Tools](#monitoring-tools)
+  - [CICD Implementation](#cicd-implementation)
+  - [GoLive Plan](#golive-plan)
 
 ## Macro architecture
 
@@ -33,3 +39,33 @@ The following are the Service Bus Topic Subscribers:
 
 
 ## Data Flow
+The proposed Retail application will have certain components integrated has shown below:
+
+![Data Flow](images/RetailServiceDataIntegration.jpg)
+
+- Traffic Manager: The traffic manager will serve as the entry point into the application. This is to allow for high availability. The web application will be deployed to multiple regions; which allows the traffic manager route to the most available node(application).
+
+- The APIs are integrated into the web application via the Azure API Management Instance.
+- The APIs(Retail, User and Products) are connected to the cosmos DB which offers a NoSQL database and provides that global availablity because of it's great replication strategies.
+- It is almost important to note at this point that all the function applications will be monitored using the Azure monitor application called Application Insights(more details below).
+- The durable function which is also a function application but is one that will maintain the state of the application. This will allow for transaction orchestration and the necessary flows needed by the microservices. It will be the orchestrator of all the processes.
+- The system message service that will be used is the service bus since it offers the best transaction workflow for scenarios that involve financial transactions and reversals. This is just a few of the benefits.
+- The signaling services for mobile/web applications, email notifications via logic apps and transactions archiving will be served via the service bus queue or topic as the use case changes.
+
+## Deployment Tools
+- The Infrastructure as code(IaC) tool(s) that will be used is Terraform and a bit of ARM Templates. The reason for my choice is as itemized below:
+1. Terraform is a multi-cloud IaC tool; this means it can be used to deploy infrasture to any of the major cloud providers availiable e.g Azure, AWS, GCP etc.
+2. It deployment enables you to maintain the state of the deployment. Which means you can see the state of the deployed resources before or after deployment
+3. It shines brightest in the sense that it allows for immutability
+  -The concept that resources can be created and destroyed; never changed
+  -It is very similar to the blue/green deployment concept.
+4. ARM templates will be used because that is the IaC readily available on Azure. It can be combined with Terraform if certain deployment cases are not available with Terraform alone.
+
+## Monitoring Tools
+For monitoring Azure really provides a great tool which can be used to monitor applications end-to-end transaction details and it also allows for Alerts configuration in the event of Azure planned or unplanned Infrastructure updates. Find more reading in [Azure Monitor](https://docs.microsoft.com/en-us/azure/azure-monitor/)
+
+## CICD Implementation
+For continuous integration and Continuous development; the tools of choice will be Jenkins(Integration) and for development is would be Azure DevOps Pipeline. The integration will be done in a blue/green deployment strategy where we will deploy to a Development( alias Dev) environment test the functionalities before approving the release to the Production(alias Prod) envrionment. The Build and release pipelines will be seperate so that artifacts from the build pipeline will be released to the desired environment.
+These will prevent unnecessary build processes. 
+
+## GoLive Plan
