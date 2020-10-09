@@ -69,3 +69,48 @@ For continuous integration and Continuous development; the tools of choice will 
 These will prevent unnecessary build processes. 
 
 ## GoLive Plan
+### Checklist
+:ballot_box_with_check: Revise architecture, get rid of Single Points of Failure
+:ballot_box_with_check: Ensure all stakeholders are happy with the propose architecture if not plan for revision and get a general consensus
+
+Additionally, you want your service to be highly available:
+
+:ballot_box_with_check: Deploy in multiple availability zones and regions(Traffic manager handles this),
+replicate data multiple times(Azure Cosmos DB handles this)
+:ballot_box_with_check: Design with failure as a real scenario and add retriable logic with exponential backoff
+:ballot_box_with_check: Ensure secure is considered
+ - Hide in a private network the resources that don’t need to be publicly accessible.
+ - Protect the resources that are exposed to public internet.
+
+#### Documentation
+:ballot_box_with_check: Ensure your documentation (README/Wiki entries), provide enough information about your app:
+
+what it does, provide enough context about the problems it solves,
+ - how to install it,
+ - how tests are run,
+ - Usage (--help output for binaries with available flags).
+
+Your microservice should be fairly simple and do very specific tasks. If you find it does too many things, consider breaking it down to more microservices.
+
+
+#### Metrics endpoint
+You can create meaningful dashboards (for example in Grafana or Application Insights has some useful metrics too) by leveraging the power of metrics. This is useful to see how your app is behaving, for example memory consumption, GC pauses, error rate, HTTP status codes, and whatever else is useful when troubleshooting your application.
+
+A popular tool for metrics collection is Prometheus; but we will be using Application Insights.
+
+:ballot_box_with_check: Logging
+Structured logging provides useful insights on what your app does and can be aggregated and parsed in a service like Splunk or SumoLogic. Application Insights alos has a good logging feature, it can also be incorporated with the Log Analytics Workspace. This allows for granular Data exploration of logs
+
+:ballot_box_with_check: Set up alerts
+Create alerts based on business and operations logic, here are some examples:
+
+no files received from 3rd party provider within 6hrs,
+disk usage is above 75%,
+error rate is above a certain threshold rate for 15mins,
+service is unhealthy,
+Note: Finding the right value for a threshold sometimes takes time, and should be adjusted as you don’t want to be alerted too often as you’ll end up ignoring, or even worse missing alerts due to excessive noise.
+
+Think about what threshold is acceptable for your service and investigate why an alert was triggered, and if necessary adjust the threshold.
+
+:ballot_box_with_check: Backups and restore plan
+Have a backup strategy as well as a way to restore from previous backups. It is very important that your teammates are familiar with these processes and you have tested they work.
